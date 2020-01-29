@@ -30,22 +30,24 @@ else:
 #os.system('git clone https://github.com/droope/droopescan.git')
 
 Test_banner = ['Drupal Scan',
-               'Nikto 80 Scan',
-               'Nikto 443 Scan',
+               'Nikto Scan',
                'WPScan',
+               'SSL Scan '
                ]
 
 a_sign = ' > '
 file_name = ['drupalscans.txt ',
-             'nikto80.txt ',
-             'nikto443.txt ',
+             'nikto.txt ',
              'WPScan.txt ',
-             'drupwn.txt ']
+             'sslscan.txt '             
+             ]
 
 tools_commands = ['python3 ./droopescan scan drupal -u ', 
                   'nikto -o niktoHTTPresults.html -Format htm -h ', 
-                  'nikto -o niktoHTTPSresults.html -Format htm -h https://',
-                  'wpscan --url ',]
+                  'wpscan --url '
+                  ' ',
+                  'sslscan '
+                  ]
 slash = '/'
 print("********************************************************************************************************")
 scan_URL = input("\nPlease enter the URL : - ")
