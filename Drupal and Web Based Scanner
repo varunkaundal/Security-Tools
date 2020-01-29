@@ -1,0 +1,79 @@
+import os
+import datetime
+
+
+lib_dependencies = ['apt-get install', 
+                    'pip install droopescan', 
+                    'pip install bs4', 
+                    'pip install prompt_toolkit>=2.0.7', 
+                    'pip install veryprettytable', 
+                    'pip install pysocks', 
+                    'pip install requests']
+
+for i in range(len(lib_dependencies)):
+    os.system(lib_dependencies[i])
+
+dateTimeObj = datetime.datetime.now()
+timestampstr = dateTimeObj.strftime("%d-%b-%Y_%H:%M:%S")
+#print(timestampstr)
+path = '/root/hello1/Saint-Gobain'
+folder_name = path + timestampstr
+#print(folder_name)
+try:
+    os.mkdir(folder_name)
+except OSError:
+    print ("Creation of the directory %s failed" % folder_name)
+
+else:
+    print (' ')
+
+#os.system('git clone https://github.com/droope/droopescan.git')
+
+Test_banner = ['Drupal Scan',
+               'Nikto 80 Scan',
+               'Nikto 443 Scan',
+               'WPScan',
+               ]
+
+a_sign = ' > '
+file_name = ['drupalscans.txt ',
+             'nikto80.txt ',
+             'nikto443.txt ',
+             'WPScan.txt ',
+             'drupwn.txt ']
+
+tools_commands = ['python3 ./droopescan scan drupal -u ', 
+                  'nikto -o niktoHTTPresults.html -Format htm -h ', 
+                  'nikto -o niktoHTTPSresults.html -Format htm -h https://',
+                  'wpscan --url ',]
+slash = '/'
+print("********************************************************************************************************")
+scan_URL = input("\nPlease enter the URL : - ")
+
+for i in range (len(tools_commands)):
+    print('\n')
+    print(Test_banner[i])
+    commands_URL = tools_commands[i] + scan_URL
+    #print(commands_URL)
+    file_commands_name = commands_URL + a_sign
+    #print(file_commands_name)
+    file_commands_name_2= file_commands_name + folder_name
+    #print(file_commands_name_2)
+    file_commands_name_final = file_commands_name_2 + file_name[i]
+    print(file_commands_name_final)
+    os.system(file_commands_name_final)
+    com = 'mv '
+    file_copy = com + folder_name
+    file_copy = file_copy + file_name[i]
+    print(file_copy)
+    file_copy = file_copy + folder_name
+    file_copy = file_copy +slash
+    print(file_copy)
+    os.system(file_copy)
+    
+
+    
+
+
+
+
