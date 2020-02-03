@@ -1,0 +1,95 @@
+import os
+import datetime
+
+a = '*'
+print(160 * a)
+print('\n********************    Run this Program with Python3    ******************** \n')
+print('\n********************          Welcome to Neptune         ********************\n')
+
+banners = ['Nmap TCP Scan',
+           'UnicornUDPScan',
+           'Nmap FTP Port Scan',
+           'Nmap SSH Port Scan',
+           'Nikto Port 80 Scan',
+           'Nikto Port 443 Scan',
+           'wpscan Scan',]
+
+commands_filenames = ['nmapTCPScan.txt', 
+                      'UnicornUDPScan.txt',
+                      'FTPportScan.txt', 
+                      'SSHportScan.txt', 
+                      'niktoPort80.txt', 
+                      'niktoPort443.txt', 
+                      'wpscan.txt',]
+sign = ' > '
+commands = ['nmap -Pn -n -p1-65535 -T4 -oX nmapResultsTCP -vv ', 
+            'unicornscan -mU -Iv -r 1000 ',
+            'nmap -p21 --script "ftp-anon, ftp-proftpd-backdoor, ftp-syst, ftp-vsftpd-backdoor, ftp-vuln-cve2010-4221" -Pn -oX nmapResultsFTPscript -vv ',
+            'nmap -p22 --script "ssh2-enum-algos, ssh-auth-methods, ssh-hostkey, ssh-publickey-acceptance, ssh-run, sshv1" -Pn -oX nmapResultsSSHscript -vv ',
+            'nikto -o niktoHTTPresults.html -Format htm -h ', 
+            'nikto -o niktoHTTPSresults.html -Format htm -h https://', 
+            'wpscan --url ', ]
+
+client_name = str(input("\nPlease enter the client name: - "))
+
+dateTimeObj = datetime.datetime.now()
+timestampstr = dateTimeObj.strftime("%d-%b-%Y_%H:%M:%S")
+os.system('pwd > pwd.txt')
+with open ("pwd.txt", "r") as myfile:
+    data=myfile.read().replace('\n', '')
+os.system('rm pwd.txt')
+slash='/'
+folder_name = data + slash
+folder_name = folder_name + client_name
+folder_name = folder_name + timestampstr
+
+try:
+    os.mkdir(folder_name)
+except OSError:
+    print ("Creation of the directory %s failed" % folder_name)
+
+else:
+    print(' ')
+
+
+IP_address = input("Please enter the IP: - ")
+print("\n")
+print(100 * a)
+for i in range(len(commands)):
+    commands_2 = commands[i] + IP_address
+    commands_complete = commands_2 + sign 
+    commands_complete = commands_complete + commands_filenames[i]
+    print(banners[i])
+    print(25 * a)
+    print("\nUnder Process, Please Be Patient..................\n\n")
+    #print(commands_complete)
+    os.system(commands_complete)
+    print('\n')
+    print(100 * a)
+
+com = 'mv '
+slash ='/'
+space = ' '
+for i in range(len(commands_filenames)):
+    first = com + commands_filenames[i]
+    second = first + space
+    third = second + folder_name
+    fourth = third + slash
+    os.system(fourth)
+print('*******************************************************************************************************')
+print('*******************************************************************************************************')
+
+fileoutdict = ['nmapResultsTCP ', 'nmapResultsFTPscript ', 'nmapResultsSSHscript ', 'niktoHTTPresults.html ', 'niktoHTTPSresults.html ']
+for i in range(len(fileoutdict)):
+    command = 'mv '
+    filenmapxml =  fileoutdict[i]
+    addfile = command + filenmapxml
+    data1 = addfile +folder_name
+    os.system(data1)
+
+print("\n Please check http://localhost:8001 for more details under below mentioned directory\n") 
+print(folder_name)
+print('\n')
+os.system('fuser -k 8001/tcp')
+server_command = 'python -m SimpleHTTPServer 8001'
+os.system(server_command)
