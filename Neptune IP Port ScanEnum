@@ -1,0 +1,282 @@
+from optparse import OptionParser
+import datetime
+import os
+import sys
+#import pyfiglet
+
+os.system('sudo apt install figlet toilet')
+
+
+#result = pyfiglet.figlet_format("Neptune")
+#print(result)
+os.system('figlet -c -w 150 Neptune')
+
+
+a = '*'
+#print(160 * a)
+#print('\n********************    Run this Program with Python3    ******************** \n')
+#print('\n********************          Welcome to Neptune         ********************\n')
+
+
+parser = OptionParser()
+
+parser.add_option("-i", help = "Enter a Single IP to scan",)
+parser.add_option("-r", help = "Enter IP range to scan in csv format, eg:- 10.0.0.2,10.0.0.3,10.0.0.4")   
+parser.add_option("-f", help = "file name")
+parser.add_option("-c", help = "Enter the name of client")
+
+
+(options, args) = parser.parse_args()
+
+sign = ' > '
+space = ' '
+
+########################## nmap commands area ######################
+nmap_banners = ['Nmap_TCP_Scan',
+           'Nmap_FTP_Port_Scan',
+           'Nmap_SSH_Port_Scan'
+           ]
+
+nmap_commands_filenames = ['nmapTCPScan.txt ',
+                           'FTPportScan.txt ', 
+                           'SSHportScan.txt ', 
+                           ]
+
+
+nmap_commands = ['nmap -Pn -n -p1-65535 -T4 -vv -oX ', 
+                 'nmap -p21 --script "ftp-anon, ftp-proftpd-backdoor, ftp-syst, ftp-vsftpd-backdoor, ftp-vuln-cve2010-4221" -Pn -vv -oX ',
+                 'nmap -p22 --script "ssh2-enum-algos, ssh-auth-methods, ssh-hostkey, ssh-publickey-acceptance, ssh-run, sshv1" -Pn --vv -oX ',]
+
+################################  Other commands banners ######################
+other_commands_banner = ['UDP_Scan',
+                         'Samba_Enum']
+
+############################### Other Commands Files ##########################                         
+other_commands_filenames = ['UDPScanning.txt ',
+                            'enum4linux.txt']
+
+
+################################ UDP Scanning and Samba enumeration ######################
+other_commands = ['unicornscan -mU -Iv -r 1000 ',
+                  'enum4linux -a ',
+            ]
+
+
+########################## file_copy_commands ######################
+move = 'mv '
+
+
+########################################## Folder creation functions   ##############################################################
+dateTimeObj = datetime.datetime.now()
+timestampstr = dateTimeObj.strftime("%d-%b-%Y_%H:%M:%S")
+os.system('pwd > pwd.txt')
+    
+with open ("pwd.txt", "r") as myfile:
+    data =myfile.read().replace('\n', '')
+    os.system('rm pwd.txt')
+
+slash='/'
+folder_name = data + slash
+folder_name = folder_name + str((options.c))
+folder_name = folder_name + timestampstr
+
+
+def folder_creations():
+    try:
+        os.mkdir(folder_name)
+    except OSError:
+        print ("Creation of the directory %s failed" % folder_name)
+    else:
+        print(' ')
+
+###########################################  If we have only 1 IP Address in scope ####################################################
+#######################################################################################################################################
+if (options.i) and (options.c):
+    folder_creations()
+    for i in range(len(nmap_commands)):
+        print(nmap_banners[i] + options.i)
+        com1 = nmap_commands[i] + options.i
+        com2 = com1 + nmap_banners[i]
+        com3 = com2 + space
+        com4 = com3 + options.i
+        com5 = com4 + sign
+        com6 = com5 + options.i
+        com7 = com6 +nmap_commands_filenames[i]
+        #print(com7)  
+        os.system(com7)
+        com8 = move + options.i
+        com9 = com8 + nmap_commands_filenames[i]
+        com10 = com9 + space
+        com11 = com10 + folder_name
+        com12 = com11 + slash
+        #print(com12)
+        os.system(com12)
+        com13 = move + options.i
+        com14 = com13 + nmap_banners[i]
+        com15 = com14 + space
+        com16 = com15 + folder_name
+        com17 = com16 + slash
+        #print(com17)
+        os.system(com17)
+        print("\n*************************************************************************************************************************\n")
+
+    for k in range(len(other_commands)):
+        print(other_commands_banner[k] + options.i) 
+        com18 = other_commands[k] + options.i
+        com19 = com18 + sign
+        com20 = com19 + options.i
+        com21 = com20 + other_commands_filenames[k]
+        #print(com21)
+        os.system(com21)
+        com22 = move + options.i
+        com23 = com22 + other_commands_filenames[k]
+        com24 = com23 + space
+        com25 = com24 + folder_name
+        com26 = com25 + slash
+        #print(com26)
+        os.system(com26)
+        print("\n*************************************************************************************************************************\n")
+
+    print("\n Please check http://localhost:8001 for more details under below mentioned directory\n") 
+    print(folder_name)
+    print('\n')
+    os.system('fuser -k 8001/tcp')
+    server_command = 'python -m SimpleHTTPServer 8001'
+    os.system(server_command)
+
+
+          
+
+       
+########################################### If we need to mention a range of IP Addresses to scan #####################################
+#######################################################################################################################################
+elif (options.r) and (options.c):
+    #print('\n it is a range')
+    first_dict = []
+    first_dict = [x for x in (options.r).split(",")]
+    #print(first_dict)
+    #print('folder is :    ')
+    folder_creations()
+    
+    for v in range(len(first_dict)):
+        for i in range(len(nmap_commands)):
+            print(nmap_banners[i] + first_dict[v])
+            com1 = nmap_commands[i] + first_dict[v]
+            com2 = com1 + nmap_banners[i]
+            com3 = com2 + space
+            com4 = com3 + first_dict[v]
+            com5 = com4 + sign
+            com6 = com5 + first_dict[v]
+            com7 = com6 +nmap_commands_filenames[i]
+            #print(com7)  
+            os.system(com7)
+            com8 = move + first_dict[v]
+            com9 = com8 + nmap_commands_filenames[i]
+            com10 = com9 + space
+            com11 = com10 + folder_name
+            com12 = com11 + slash
+            #print(com12)
+            os.system(com12)
+            com13 = move + first_dict[v]
+            com14 = com13 + nmap_banners[i]
+            com15 = com14 + space
+            com16 = com15 + folder_name
+            com17 = com16 + slash
+            #print(com17)
+            os.system(com17)
+            print("\n*************************************************************************************************************************\n")
+
+        for k in range(len(other_commands)):
+            print(other_commands_banner[k] + first_dict[v])
+            com18 = other_commands[k] + first_dict[v]
+            com19 = com18 + sign
+            com20 = com19 + first_dict[v]
+            com21 = com20 + other_commands_filenames[k]
+            #print(com21)
+            os.system(com21)
+            com22 = move + first_dict[v]
+            com23 = com22 + other_commands_filenames[k]
+            com24 = com23 + space
+            com25 = com24 + folder_name
+            com26 = com25 + slash
+            #print(com26)
+            os.system(com26)
+            print("\n*************************************************************************************************************************\n")
+
+    print("\n Please check http://localhost:8001 for more details under below mentioned directory\n") 
+    print(folder_name)
+    print('\n')
+    os.system('fuser -k 8001/tcp')
+    server_command = 'python -m SimpleHTTPServer 8001'
+    os.system(server_command)
+    
+########################################### If we need to mention a file containing all IP Addresses to scan #####################################
+#######################################################################################################################################
+elif (options.f) and (options.c):
+    print('hello')
+    with open (options.f, "r") as myfile:
+        lines = [line.rstrip() for line in myfile]
+        filelines = []
+        filelines = ' '.join(lines).split()
+        print(filelines)
+    folder_creations()
+    
+    for v in range(len(filelines)):
+        for i in range(len(nmap_commands)):
+            print(nmap_banners[i] + filelines[v] )
+            com1 = nmap_commands[i] + filelines[v]
+            com2 = com1 + nmap_banners[i]
+            com3 = com2 + space
+            com4 = com3 + filelines[v]
+            com5 = com4 + sign
+            com6 = com5 + filelines[v]
+            com7 = com6 +nmap_commands_filenames[i]
+            #print(com7)  
+            os.system(com7)
+            com8 = move + filelines[v]
+            com9 = com8 + nmap_commands_filenames[i]
+            com10 = com9 + space
+            com11 = com10 + folder_name
+            com12 = com11 + slash
+            #print(com12)
+            os.system(com12)
+            com13 = move + filelines[v]
+            com14 = com13 + nmap_banners[i]
+            com15 = com14 + space
+            com16 = com15 + folder_name
+            com17 = com16 + slash
+            #print(com17)
+            os.system(com17)
+            print("\n*************************************************************************************************************************\n")
+
+        for k in range(len(other_commands)):
+            print(other_commands_banner[k] + filelines[v])
+            com18 = other_commands[k] + filelines[v]
+            com19 = com18 + sign
+            com20 = com19 + filelines[v]
+            com21 = com20 + other_commands_filenames[k]
+            #print(com21)
+            os.system(com21)
+            com22 = move + filelines[v]
+            com23 = com22 + other_commands_filenames[k]
+            com24 = com23 + space
+            com25 = com24 + folder_name
+            com26 = com25 + slash
+            #print(com26)
+            os.system(com26)
+            print("\n*************************************************************************************************************************\n")
+
+    print("\n Please check http://localhost:8001 for more details under below mentioned directory\n") 
+    print(folder_name)
+    print('\n')
+    os.system('fuser -k 8001/tcp')
+    server_command = 'python -m SimpleHTTPServer 8001'
+    os.system(server_command)
+
+
+########################################## If no argument is provided ##################################################################
+#######################################################################################################################################
+else:
+    print('Please enter atleast Two flags...... "IP address and Client name" or "IP address range and client address"')
+    parser.print_help()
+    print('\n')
