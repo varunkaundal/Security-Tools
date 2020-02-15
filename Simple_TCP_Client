@@ -1,0 +1,27 @@
+import argparse
+import os
+import socket
+
+parser = argparse.ArgumentParser(description= "This is a simple TCP client which sends a simple Get request to host and provide response")
+
+parser.add_argument("-w", action = "store", help = " Enter the web URL ")
+
+args = parser.parse_args()
+
+if (args.w):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host = (args.w).strip("/")
+    print(host)
+    port = 80
+
+    client.connect((host, port))
+    print(host, port)
+    string1 = "GET / HTTP/1.1\r\nHost: "
+    string2 = "\r\n\r\n"
+    data =  string1 + args.w + string2
+    client.send(data.encode('utf-8'))
+    response = client.recv(4096)
+    print(response)
+
+else:
+    print("Usage is : python3 << script name >> -w << URL >>, eg: www.google.co.in")
