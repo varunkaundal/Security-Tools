@@ -4,7 +4,7 @@ import datetime
 a = '*'
 print(160 * a)
 print('\n********************    Run this Program with Python3    ******************** \n')
-print('\n********************          Welcome to Neptune         ********************\n')
+print('\n********************               Welcome        ********************\n')
 
 banners = ['Nmap TCP Scan',
            'UnicornUDPScan',
